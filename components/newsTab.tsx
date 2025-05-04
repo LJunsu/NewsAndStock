@@ -24,7 +24,7 @@ export const NewsTab = ({selectNews, id, title, publisher, image_url}: NewsTabPr
                 src="/images/default_image.png" alt={title}
                 width={110} height={60}
                 loading="lazy"
-                className="w-28 max-h-16 object-fill"
+                className="w-28 max-h-16 object-contain"
             />}
 
             <div className="w-[calc(100%-7rem-1rem)] flex flex-col gap-4">

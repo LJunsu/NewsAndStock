@@ -72,8 +72,6 @@ export default function Home() {
         });
         setModalNews(news[modalIndex]);
     }, [modal]);
-
-    console.log(news);
     
     return (
         <div className="relative flex flex-col items-center gap-8 mb-8">
