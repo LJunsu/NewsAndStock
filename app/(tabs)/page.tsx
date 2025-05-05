@@ -58,6 +58,13 @@ export default function Home() {
     const [modal, setModal] = useState<string | null>(null);
     const selectNews = (id: string) => {
         setModal(id);
+
+        fetch(`/api/news/selectNews?id=${id}`)
+            .then((res) => res.json())
+            .then((data) => {
+                if(data.length) console.log("있음 ", data); // 조회수 할거면 update, 아니면 아무 동작 X
+                else console.log("없음 ", data); // insert
+            })
     }
     const closeModal = () => {
         setModal(null);
