@@ -1,7 +1,11 @@
 import { NewsItem } from "@/lib/NewsIteminterface";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { NewsModalSide } from "./newsModalSide";
+import { UserInfo } from "@/lib/UserInfo";
+import { fetchEmail } from "@/lib/fetchEmail";
+import { fetchUserInfo } from "@/lib/fetchUserInfo";
 
 interface NewsModalProps {
     closeModal: () => void;
@@ -23,6 +27,27 @@ export const NewsModal = ({closeModal, modalNews}: NewsModalProps) => {
             document.body.style.overflow = "";
         };
     }, []);
+
+    const [email, setEmail] = useState<string | null>(null);
+    const [user, setUser] = useState<UserInfo | null>(null);
+
+    useEffect(() => {
+        const getEmail = async () => {
+            const email = await fetchEmail();
+            setEmail(email);
+        } 
+
+        getEmail();
+    }, []);
+
+    useEffect(() => {
+        const getUser = async () => {
+            const user = await fetchUserInfo(email)
+            setUser(user);
+        }
+
+        getUser();
+    }, [email]);
 
     return (
         <div className="fixed top-0 left-0 z-50 flex items-center justify-center w-screen h-screen bg-[#00000050]" onClick={closeModal}>
@@ -62,15 +87,15 @@ export const NewsModal = ({closeModal, modalNews}: NewsModalProps) => {
                             </div>
                         }
 
-                        <div>{modalNews.summary}</div>
+                        <div className="text-sm text-[#767678] leading-relaxed">
+                            {modalNews.summary}
+                        </div>
 
                         <Link
                             href={modalNews.content_url}
                         >자세히 보기→</Link>
                     
-                        <div>
-                            좋아요 댓글 기능 구현하기
-                        </div>
+                        <NewsModalSide user={user} />
                     </div>
                 )
                 : "loading..."}

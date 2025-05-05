@@ -21,7 +21,7 @@ export default function Auth() {
     return (
         <div className="relative w-full h-screen *:text-white">
             <div className="absolute top-1/2 left-1/2 transform -translate-1/2 flex flex-col justify-around w-1/2 min-w-[500px] h-3/4 min-h-[500px] bg-[#3F63BF] shadow-lg rounded-2xl p-10">
-                <div className="w-[200px] h-[200px] mx-auto">
+                <div className="w-[200px] h-[200px] mx-auto pb-4">
                     <Image
                         src="/images/SkyPass.png" alt="SkyPass 로고"
                         width={200} height={200}

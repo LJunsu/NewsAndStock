@@ -1,7 +1,28 @@
 @import "tailwindcss";
 
 @layer base {
+    @font-face {
+        font-family: 'KakaoBigSans-ExtraBold';
+        src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2503@1.0/KakaoBigSans-ExtraBold.woff2') format('woff2');
+        font-weight: 800;
+        font-style: normal;
+    }
+    @font-face {
+        font-family: 'KakaoBigSans-ExtraBold';
+        src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2503@1.0/KakaoBigSans-ExtraBold.woff2') format('woff2');
+        font-weight: 700;
+        font-style: normal;
+    }
+    @font-face {
+        font-family: 'KakaoBigSans-ExtraBold';
+        src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2503@1.0/KakaoBigSans-ExtraBold.woff2') format('woff2');
+        font-weight: 400;
+        font-style: normal;
+    }
+
     body {
         background-color: #F4F6F8;
+        font-family: 'KakaoBigSans-ExtraBold', 'Merriweather', serif;
+        line-height: 1.6;
     }
 }

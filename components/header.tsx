@@ -7,12 +7,13 @@ import { useEffect, useState } from "react";
 import { LogoutButton } from "./logout";
 import { UserInfo } from "@/lib/UserInfo";
 import useHeaderKeywordStore from "@/stores/HeaderKeywordStore";
+import { fetchUserInfo } from "@/lib/fetchUserInfo";
+import { fetchEmail } from "@/lib/fetchEmail";
 
 export default function Header() {
     const pathname = usePathname();
     const [email, setEmail] = useState<string | null>(null);
     const [user, setUser] = useState<UserInfo | null>(null);
-    const [searchShow, setSearchShow] = useState<boolean>(false);
 
     const {keyword, keywordClick} = useHeaderKeywordStore();
 
@@ -21,52 +22,34 @@ export default function Header() {
     }
 
     useEffect(() => {
-        async function fetchEmail() {
-            try {
-                const resp = await fetch("/api/user/userEmail");
-                const data = await resp.json();
-                setEmail(data.email);
-            } catch(err) {
-                console.error(err);
-                setEmail(null);
-            }
+        const getEmail = async () => {
+            const email = await fetchEmail();
+            setEmail(email);
         } 
 
-        fetchEmail();
+        getEmail();
     }, []);
 
     useEffect(() => {
-        async function fetchUserInfo() {
-            if(!email) return;
-
-            try {
-                const resp = await fetch(`/api/user/getUserInfo?email=${email}`);
-                const user = await resp.json();
-                setUser(user[0]);
-            } catch(err) {
-                console.error(err);
-                setUser(null);
-            }
+        const getUser = async () => {
+            const user = await fetchUserInfo(email)
+            setUser(user);
         }
 
-        fetchUserInfo();
+        getUser();
     }, [email]);
-
-    const toggleSearchBtn = () => {
-        setSearchShow(!searchShow);
-    };
 
     return (
         <div className="flex flex-col w-full h-[100px] mb-4 *:px-4">
             <div className="flex justify-between w-full h-1/2 bg-[#3F63BF]">
                 <div className="flex gap-4">
-                    <Link href="/">
+                    <Link href="/" className="flex items-center">
                         <Image
                             src="/images/SkyPass.png"
                             alt="SkyPass Logo"
                             width={50} height={50}
                             loading="lazy"
-                            className="h-full object-fit"
+                            className="w-14"
                         />
                     </Link>
 
