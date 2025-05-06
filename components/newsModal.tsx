@@ -95,7 +95,7 @@ export const NewsModal = ({closeModal, modalNews}: NewsModalProps) => {
                             href={modalNews.content_url}
                         >자세히 보기→</Link>
                     
-                        <NewsModalSide user={user} />
+                        <NewsModalSide user={user} newsId={modalNews.id} />
                     </div>
                 )
                 : "loading..."}

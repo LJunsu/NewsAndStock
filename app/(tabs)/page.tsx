@@ -62,9 +62,8 @@ export default function Home() {
         fetch(`/api/news/selectNews?id=${id}`)
             .then((res) => res.json())
             .then((data) => {
-                if(data.length) console.log("있음 ", data); // 조회수 할거면 update, 아니면 아무 동작 X
-                else console.log("없음 ", data); // insert
-            })
+                console.log(data.message);
+            });
     }
     const closeModal = () => {
         setModal(null);
