@@ -12,8 +12,7 @@ interface NewsModalProps {
     modalNews: NewsItem | null
 }
 export const NewsModal = ({closeModal, modalNews}: NewsModalProps) => {
-    console.log(modalNews);
-
+    
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             if(e.key === "Escape") closeModal();

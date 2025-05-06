@@ -1,6 +1,6 @@
+import { ResultSetHeader, RowDataPacket } from "mysql2";
 import { NextResponse } from "next/server";
-import { newsLikeCheck, newsLikeDelete, newsLikeInsert } from "../newsTable";
-import { RowDataPacket } from "mysql2";
+import { newsLikeInsert } from "../newsTable";
 
 export async function POST(req: Request) {
     
@@ -10,16 +10,12 @@ export async function POST(req: Request) {
 
         if(!id || !email) return NextResponse.json({ ok: false, message: "Invalid body" }, { status: 400 });
 
-        const like = await newsLikeCheck(id, email) as RowDataPacket[];
-
-        if(like.length > 0) {
-            // await newsLikeDelete(id, email);
+        const result = await newsLikeInsert(id, email) as ResultSetHeader;
+        if(result.affectedRows > 0) {
             return NextResponse.json({ok: true, likeOn: true});
         }
-        else {
-            // await newsLikeInsert(id, email);
-            return NextResponse.json({ok: true, likeOn: false});
-        }
+
+        return NextResponse.json({ok: false, likeOn: false});
     } catch(err) {
         console.error(err);
         return NextResponse.json({ ok: false, message: "Internal Server Error" }, { status: 500 });
