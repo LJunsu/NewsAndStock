@@ -56,10 +56,6 @@ export default function Header() {
                     <Link href="/" className="flex items-center">
                         <div className={`text-white text-xl ${pathname === "/" && "font-bold"}`}>뉴스</div>
                     </Link>
-
-                    <Link href="/stock" className="flex items-center">
-                        <div className={`text-white text-xl ${pathname === "/stock" && "font-bold"}`}>주식</div>
-                    </Link>
                 </div>
 
                 <div className="flex items-center gap-6 my-2">

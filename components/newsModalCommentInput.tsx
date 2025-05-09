@@ -1,9 +1,13 @@
 import { UserInfo } from "@/lib/UserInfo";
+import { useActionState } from "react";
+import { addNewsCommentAction } from "./action/addNewsCommentAction";
 
 interface NewsModalCommentInputProps {
-    user: UserInfo | null
+    user: UserInfo | null,
+    newsId: string
 }
-export const NewsModalCommentInput = ({user} : NewsModalCommentInputProps) => {
+export const NewsModalCommentInput = ({user, newsId} : NewsModalCommentInputProps) => {
+    const [state, action] = useActionState(addNewsCommentAction, null);
 
     if(!user) return;
 
@@ -13,7 +17,8 @@ export const NewsModalCommentInput = ({user} : NewsModalCommentInputProps) => {
                 {user?.nickname}
             </div>
 
-            <form className="flex flex-col gap-4 w-full">
+            <form action={action} className="flex flex-col gap-4 w-full">
+                <input type="hidden" name="newsId" value={newsId} />
                 <textarea
                     name="comment"
                     rows={3}
