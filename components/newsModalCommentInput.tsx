@@ -1,13 +1,39 @@
 import { UserInfo } from "@/lib/UserInfo";
 import { useActionState } from "react";
 import { addNewsCommentAction } from "./action/addNewsCommentAction";
+import { CommentType } from "./newsModal";
 
 interface NewsModalCommentInputProps {
     user: UserInfo | null,
-    newsId: string
+    newsId: string,
+    insertComment: React.Dispatch<React.SetStateAction<CommentType[]>>;
 }
-export const NewsModalCommentInput = ({user, newsId} : NewsModalCommentInputProps) => {
+export const NewsModalCommentInput = ({user, newsId, insertComment} : NewsModalCommentInputProps) => {
     const [state, action] = useActionState(addNewsCommentAction, null);
+
+    const clickInsertComment = async () => {
+        const formElement = document.getElementById("commentForm") as HTMLFormElement;
+        if(!formElement) return;
+
+        const formData = new FormData(formElement);
+        let newsId = formData.get("newsId");
+        let email = formData.get("email");
+        let comment = formData.get("comment");
+
+        newsId = typeof newsId === "string" ? newsId : ""
+        email = typeof email === "string" ? email : ""
+        comment = typeof comment === "string" ? comment : ""
+        if(comment.length <= 3) return;
+
+        const newComment: CommentType = {
+            news_comment_id: Date.now() + Math.random(),
+            news_comment_content: comment,
+            id: newsId,
+            email: email
+        }
+
+        insertComment(prev => [...prev, newComment]);
+    }
 
     if(!user) return;
 
@@ -17,8 +43,9 @@ export const NewsModalCommentInput = ({user, newsId} : NewsModalCommentInputProp
                 {user?.nickname}
             </div>
 
-            <form action={action} className="flex flex-col gap-4 w-full">
+            <form action={action} id="commentForm" className="flex flex-col gap-4 w-full">
                 <input type="hidden" name="newsId" value={newsId} />
+                <input type="hidden" name="email" value={user.email} />
                 <textarea
                     name="comment"
                     rows={3}
@@ -26,7 +53,9 @@ export const NewsModalCommentInput = ({user, newsId} : NewsModalCommentInputProp
                     className="w-full border-1 border-[#E5E5E5] resize-none p-2"
                 />
 
-                <button className="flex justify-center text-white bg-[#3F63BF] cursor-pointer">등록</button>
+                {!state || state.fieldErrors.comment}
+
+                <button onClick={clickInsertComment} className="flex justify-center text-white bg-[#3F63BF] cursor-pointer">등록</button>
             </form>
         </div>
     );

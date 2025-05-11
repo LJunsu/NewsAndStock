@@ -7,6 +7,12 @@ import { UserInfo } from "@/lib/UserInfo";
 import { fetchEmail } from "@/lib/fetchEmail";
 import { fetchUserInfo } from "@/lib/fetchUserInfo";
 
+export interface CommentType {
+    news_comment_id: number,
+    news_comment_content: string,
+    id: string,
+    email: string
+}
 interface NewsModalProps {
     closeModal: () => void;
     modalNews: NewsItem | null

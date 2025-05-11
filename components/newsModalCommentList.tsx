@@ -1,9 +1,20 @@
+import { CommentType } from "./newsModal";
 
-export const NewsModalCommentList = () => {
+interface NewsModalCommentListProps {
+    comments: CommentType[]
+}
+export const NewsModalCommentList = ({comments}: NewsModalCommentListProps) => {
 
     return (
         <div>
-            NewsModalCommentList
+            {comments ? comments.map((comment) => {
+                return (
+                    <div key={comment.news_comment_id} className="flex">
+                        <div>{comment.email}</div>
+                        <div>{comment.news_comment_content}</div>
+                    </div>
+                )
+            }) : null}
         </div>
     );
 }

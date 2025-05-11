@@ -4,6 +4,7 @@ import { NewsModalCommentList } from "./newsModalCommentList";
 import { UserInfo } from "@/lib/UserInfo";
 import { useEffect, useState } from "react";
 import { likeCheckNowUser } from "@/lib/likeToggleExists";
+import { CommentType } from "./newsModal";
 
 interface NewsModalSideProps {
     user: UserInfo | null,
@@ -12,6 +13,18 @@ interface NewsModalSideProps {
 export const NewsModalSide = ({user, newsId}: NewsModalSideProps) => {
     const [newsLike, setNewsLike] = useState<number>(-1);
     const [likeOn, setLikeOn] = useState<boolean>(false);
+    
+    const [comments, setComments] = useState<CommentType[]>([]);
+
+    useEffect(() => {
+        if(!newsId) return;
+
+        fetch(`/api/news/getComment?newsId=${newsId}`)
+        .then(res => res.json())
+        .then(data => {
+            setComments(data);
+        })
+    }, [newsId])
 
     useEffect(() => {
         fetch(`/api/news/getNewsLikeLength?id=${newsId}`)
@@ -88,8 +101,8 @@ export const NewsModalSide = ({user, newsId}: NewsModalSideProps) => {
 
 
             <div> 
-                <NewsModalCommentInput user={user} newsId={newsId} />
-                <NewsModalCommentList />
+                <NewsModalCommentInput user={user} newsId={newsId} insertComment={setComments} />
+                <NewsModalCommentList comments={comments} />
             </div>
         </div>
     );

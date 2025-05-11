@@ -41,3 +41,22 @@ export const newsLikeDelete = (id: string, email: string) => {
 
     return executeSQL(query, [id, email]);
 }
+
+// 해당 뉴스 아이디에 사용자가 입력한 댓글을 추가
+export const insertComment = (newsId: string, email: string, comment: string) => {
+    const query = 
+    `INSERT INTO news_comment (
+        news_comment_content, id, email
+    ) VALUES (
+        ?, ?, ?
+    )`;
+
+    return executeSQL(query, [comment, newsId, email]);
+}
+
+// 해당 뉴스의 댓글 리스트를 반환
+export const newsComments = (newsId: string) => {
+    const query = `SELECT * FROM news_comment WHERE id = ?`;
+
+    return executeSQL(query, [newsId]);
+}
