@@ -56,7 +56,21 @@ export const insertComment = (newsId: string, email: string, comment: string) =>
 
 // 해당 뉴스의 댓글 리스트를 반환
 export const newsComments = (newsId: string) => {
-    const query = `SELECT * FROM news_comment WHERE id = ?`;
-
+    const query = 
+    `SELECT nc.*, u.email, u.nickname, u.tel_number, u.profile_image
+    FROM news_comment nc
+    JOIN user u
+    ON nc.email = u.email
+    WHERE id = ?
+    ORDER BY news_comment_id ASC
+    `;
+    
     return executeSQL(query, [newsId]);
+}
+
+// 해당 뉴스 아이디에 댓글을 삭제
+export const deleteComment = (newsId: string, commentId: string) => {
+    const query = `DELETE FROM news_comment WHERE id = ? AND news_comment_id = ?`;
+
+    return executeSQL(query, [newsId, commentId]);
 }

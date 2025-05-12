@@ -102,7 +102,7 @@ export const NewsModalSide = ({user, newsId}: NewsModalSideProps) => {
 
             <div> 
                 <NewsModalCommentInput user={user} newsId={newsId} insertComment={setComments} />
-                <NewsModalCommentList comments={comments} />
+                <NewsModalCommentList comments={comments} user={user ? user : null} updateComment={setComments} />
             </div>
         </div>
     );

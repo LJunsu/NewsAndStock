@@ -29,7 +29,10 @@ export const NewsModalCommentInput = ({user, newsId, insertComment} : NewsModalC
             news_comment_id: Date.now() + Math.random(),
             news_comment_content: comment,
             id: newsId,
-            email: email
+            email: email,
+            nickname: user!.nickname,
+            tel_number: user?.tel_number,
+            profile_image: user?.profile_image
         }
 
         insertComment(prev => [...prev, newComment]);

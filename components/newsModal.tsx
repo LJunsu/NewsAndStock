@@ -11,7 +11,10 @@ export interface CommentType {
     news_comment_id: number,
     news_comment_content: string,
     id: string,
-    email: string
+    email: string,
+    nickname: string,
+    tel_number: string | undefined,
+    profile_image: string | null | undefined
 }
 interface NewsModalProps {
     closeModal: () => void;
