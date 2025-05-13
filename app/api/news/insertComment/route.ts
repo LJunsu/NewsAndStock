@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { insertComment } from "../newsTable";
+import { insertComment, thisNewsComment } from "../newsTable";
 import { ResultSetHeader } from "mysql2";
 
 export async function POST(req: Request) {
@@ -11,9 +11,15 @@ export async function POST(req: Request) {
             return NextResponse.json({message: "Invalid body"}, {status: 400});
         }
     
-        const result = await insertComment(newsId, email, comment) as ResultSetHeader;
+        const insertResult = await insertComment(newsId, email, comment) as ResultSetHeader;
+        
+        if(insertResult.affectedRows > 0) {
+            // 방금 추가한 댓글의 정보 반환
+            const newsCommentId = insertResult.insertId;
+            const result = await thisNewsComment(newsCommentId) as ResultSetHeader;
 
-        if(result.affectedRows > 0) return NextResponse.json({ok: true});
+            return NextResponse.json({ok: true, nowInsertComment: result});
+        }
         else return NextResponse.json({message: "댓글 등록에 실패했습니다. 다시 시도해주세요."}, {status: 400});
     } catch(err) {
         console.error(err);

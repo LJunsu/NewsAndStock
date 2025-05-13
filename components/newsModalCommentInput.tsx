@@ -1,5 +1,5 @@
 import { UserInfo } from "@/lib/UserInfo";
-import { useActionState } from "react";
+import { useActionState, useRef, useTransition } from "react";
 import { addNewsCommentAction } from "./action/addNewsCommentAction";
 import { CommentType } from "./newsModal";
 
@@ -11,31 +11,36 @@ interface NewsModalCommentInputProps {
 export const NewsModalCommentInput = ({user, newsId, insertComment} : NewsModalCommentInputProps) => {
     const [state, action] = useActionState(addNewsCommentAction, null);
 
-    const clickInsertComment = async () => {
-        const formElement = document.getElementById("commentForm") as HTMLFormElement;
+    const formRef = useRef<HTMLFormElement>(null);
+
+    const [isPending, startTransition] = useTransition();
+
+    const clickInsertComment = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        const formElement = formRef.current;
         if(!formElement) return;
 
         const formData = new FormData(formElement);
-        let newsId = formData.get("newsId");
-        let email = formData.get("email");
-        let comment = formData.get("comment");
 
-        newsId = typeof newsId === "string" ? newsId : ""
-        email = typeof email === "string" ? email : ""
-        comment = typeof comment === "string" ? comment : ""
-        if(comment.length <= 3) return;
+        let comment = formData.get("comment") as string;
 
-        const newComment: CommentType = {
+        const optimisticComment: CommentType = {
             news_comment_id: Date.now() + Math.random(),
             news_comment_content: comment,
             id: newsId,
-            email: email,
+            email: user!.email,
             nickname: user!.nickname,
             tel_number: user?.tel_number,
             profile_image: user?.profile_image
-        }
+        };
 
-        insertComment(prev => [...prev, newComment]);
+        if(comment.length > 3) insertComment(prev => [...prev, optimisticComment]);
+
+        startTransition(async () => {
+            const result = action(formData); // 이게 await로 수행되서 결과를 기다린 후 아래 콘솔을 찍어야 하는데, action보다 이게 먼저 끝나서 action의 결과를 못가져옴
+            console.log("---------->", result);
+        });
     }
 
     if(!user) return;
@@ -46,7 +51,7 @@ export const NewsModalCommentInput = ({user, newsId, insertComment} : NewsModalC
                 {user?.nickname}
             </div>
 
-            <form action={action} id="commentForm" className="flex flex-col gap-4 w-full">
+            <form ref={formRef} id="commentForm" className="flex flex-col gap-4 w-full">
                 <input type="hidden" name="newsId" value={newsId} />
                 <input type="hidden" name="email" value={user.email} />
                 <textarea

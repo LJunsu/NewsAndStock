@@ -68,6 +68,19 @@ export const newsComments = (newsId: string) => {
     return executeSQL(query, [newsId]);
 }
 
+// 해당 id의 댓글 반환
+export const thisNewsComment = (newsCommentId: number) => {
+    const query = 
+    `SELECT nc.*, u.email, u.nickname, u.tel_number, u.profile_image
+    FROM news_comment nc
+    JOIN user u
+    ON nc.email = u.email
+    WHERE news_comment_id = ?
+    `;
+    
+    return executeSQL(query, [newsCommentId]);
+}
+
 // 해당 뉴스 아이디에 댓글을 삭제
 export const deleteComment = (newsId: string, commentId: string) => {
     const query = `DELETE FROM news_comment WHERE id = ? AND news_comment_id = ?`;

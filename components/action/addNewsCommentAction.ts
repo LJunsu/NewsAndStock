@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { CommentType } from "../newsModal";
 
 const addNewsCommentSchema = z.object({
     newsId: z.string(),
@@ -24,7 +25,7 @@ export const addNewsCommentAction = async (prevState: unknown, formData: FormDat
             comment: result.data.comment
         }
 
-        fetch("/api/news/insertComment", {
+        const nowInsertComment = await fetch("/api/news/insertComment", {
             method: "POST",
             headers: {
                 "Content-Type" : "application/json"
@@ -34,9 +35,15 @@ export const addNewsCommentAction = async (prevState: unknown, formData: FormDat
         .then(res => res.json())
         .then(data => {
             if(!data.ok) console.error(data.message);
+            return data.nowInsertComment;
         })
         .catch(err => {
             console.error(err);
-        })
+        });
+
+        const resultComment: CommentType = nowInsertComment[0];
+        console.log(">>>>>>>>>>>>", resultComment); // 이 결과를 기다린 후 반환해야 하는데..
+
+        return resultComment;
     }
 }
