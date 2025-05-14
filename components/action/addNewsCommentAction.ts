@@ -7,7 +7,7 @@ const addNewsCommentSchema = z.object({
     comment: z.string().min(4, {message: "4글자 이상 입력하세요."}).max(200, {message: "댓글이 너무 깁니다."})
 })
 
-export const addNewsCommentAction = async (prevState: unknown, formData: FormData) => {
+export const addNewsCommentAction = async (formData: FormData) => {
     const data = {
         newsId: formData.get("newsId"),
         email: formData.get("email"),
@@ -17,6 +17,7 @@ export const addNewsCommentAction = async (prevState: unknown, formData: FormDat
     const result = await addNewsCommentSchema.safeParseAsync(data);
 
     if(!result.success) {
+        // zod 유효성 검사 실패 - 에러 메시지
         return result.error.flatten();
     } else {
         const insertComment = {
@@ -25,6 +26,7 @@ export const addNewsCommentAction = async (prevState: unknown, formData: FormDat
             comment: result.data.comment
         }
 
+        // insert API
         const nowInsertComment = await fetch("/api/news/insertComment", {
             method: "POST",
             headers: {
@@ -35,14 +37,15 @@ export const addNewsCommentAction = async (prevState: unknown, formData: FormDat
         .then(res => res.json())
         .then(data => {
             if(!data.ok) console.error(data.message);
+            // insert 성공 시 추가된 댓글 데이터 반환(낙관적 UI 관련 추가된 데이터 화면에 출력하기 위함)
             return data.nowInsertComment;
         })
         .catch(err => {
             console.error(err);
         });
 
+        // insert 성공 시 추가된 댓글 데이터 반환(낙관적 UI 관련 추가된 데이터 화면에 출력하기 위함)
         const resultComment: CommentType = nowInsertComment[0];
-        console.log(">>>>>>>>>>>>", resultComment); // 이 결과를 기다린 후 반환해야 하는데..
 
         return resultComment;
     }
