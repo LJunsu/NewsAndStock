@@ -16,7 +16,7 @@ export const NewsModalCommentList = ({comments, user, updateComments}: NewsModal
     const [isDeleteCommentModal, setDeleteCommentModal] = useState<boolean>(false);
     const [deleteCommentId, setDeleteCommentId] = useState<DeleteCommentIdType | null>(null);
 
-    const updateComment = () => {
+    const updateComment = () => {ZXZXZDSADASDASDASD
         // 댓글 수정 구현하기
     }
 
