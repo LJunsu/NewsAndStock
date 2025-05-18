@@ -2,6 +2,7 @@ import { UserInfo } from "@/lib/UserInfo";
 import { useRef, useState } from "react";
 import { addNewsCommentAction } from "./action/addNewsCommentAction";
 import { CommentType } from "./newsModal";
+import formatDateString from "@/lib/formatDateString";
 
 interface NewsModalCommentInputProps {
     user: UserInfo | null,
@@ -34,7 +35,8 @@ export const NewsModalCommentInput = ({user, newsId, insertComment} : NewsModalC
             email: user!.email,
             nickname: user!.nickname,
             tel_number: user?.tel_number,
-            profile_image: user?.profile_image
+            profile_image: user?.profile_image,
+            news_comment_insert_date: formatDateString(String(new Date()), "YYYY-MM-DD HH:mm")
         };
 
         if(comment.length > 3) insertComment(prev => [...prev, optimisticComment]);
@@ -78,7 +80,7 @@ export const NewsModalCommentInput = ({user, newsId, insertComment} : NewsModalC
 
                 {actionError ? actionError.map((err, i) => <div key={i}>{err}</div>) : null}
 
-                <button onClick={clickInsertComment} className="flex justify-center text-white bg-[#3F63BF] cursor-pointer">등록</button>
+                <button onClick={clickInsertComment} className="flex justify-center py-1 rounded-sm text-white bg-[#3F63BF] cursor-pointer">등록</button>
             </form>
         </div>
     );

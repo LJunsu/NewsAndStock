@@ -14,7 +14,8 @@ export interface CommentType {
     email: string,
     nickname: string,
     tel_number: string | undefined,
-    profile_image: string | null | undefined
+    profile_image: string | null | undefined,
+    news_comment_insert_date: string
 }
 interface NewsModalProps {
     closeModal: () => void;

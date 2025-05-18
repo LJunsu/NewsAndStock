@@ -2,6 +2,7 @@ import { CommentType } from "./newsModal";
 import Image from "next/image";
 import { UserInfo } from "@/lib/UserInfo";
 import { useState } from "react";
+import formatDateString from "@/lib/formatDateString";
 
 interface NewsModalCommentListProps {
     comments: CommentType[],
@@ -15,9 +16,11 @@ type DeleteCommentIdType = {
 export const NewsModalCommentList = ({comments, user, updateComments}: NewsModalCommentListProps) => {
     const [isDeleteCommentModal, setDeleteCommentModal] = useState<boolean>(false);
     const [deleteCommentId, setDeleteCommentId] = useState<DeleteCommentIdType | null>(null);
+    const [isCommentUpdate, setCommentUpdate] = useState<{is: boolean, index: number | null}>({is: false, index: null});
 
-    const updateComment = () => {ZXZXZDSADASDASDASD
-        // 댓글 수정 구현하기
+    const updateComment = (commentIndex: number | null) => {
+        if(!isCommentUpdate.is) setCommentUpdate({is: true, index: commentIndex});
+        else setCommentUpdate({is: false, index: null});
     }
 
     const deleteComment = async (newsId: string, commentId: number) => {
@@ -43,26 +46,33 @@ export const NewsModalCommentList = ({comments, user, updateComments}: NewsModal
 
     return (
         <div className="relative">
-            {comments ? comments.map((comment) => {
+            {comments ? comments.map((comment, commentIndex) => {
                 return (
                     <div 
                         key={comment.news_comment_id} 
                         className="flex flex-col gap-4 mt-4 pb-4 border-b-1 border-[#E5E5E5] text-sm"
                     >
                         <div className="flex justify-between items-center">
-                            <div className="flex gap-2 items-center">
-                                <div className="relative w-10 h-10 rounded-full border-1 border-[#E5E5E5] overflow-hidden">
-                                    {comment.profile_image 
-                                    ? <Image src={comment.profile_image} alt={comment.nickname} fill className="object-contain" />
-                                    : <Image src="/images/default_image.png" alt={comment.nickname} fill className="object-contain" />}
+                            <div className="flex gap-4 items-center">
+                                <div className="flex gap-2 items-center">
+                                    <div className="relative w-10 h-10 rounded-full border-1 border-[#E5E5E5] overflow-hidden">
+                                        {comment.profile_image 
+                                        ? <Image src={comment.profile_image} alt={comment.nickname} fill className="object-contain" />
+                                        : <Image src="/images/default_image.png" alt={comment.nickname} fill className="object-contain" />}
+                                    </div>
+
+                                    <div>{comment.nickname}</div>
                                 </div>
 
-                                <div>{comment.nickname}</div>
+                                <div>{formatDateString(comment.news_comment_insert_date, "YYYY-MM-DD HH:mm")}</div>
                             </div>
 
                             {user ? (comment.email === user.email ? 
                                 (<div className="flex gap-2">
-                                    <div className="cursor-pointer">수정</div>
+                                    <div onClick={() => updateComment(commentIndex)} 
+                                        className="cursor-pointer"
+                                    >수정</div>
+
                                     <div onClick={() => {
                                         setDeleteCommentModal(true);
                                         setDeleteCommentId({newsId: comment.id, newsCommentId: comment.news_comment_id} as DeleteCommentIdType)
@@ -72,7 +82,28 @@ export const NewsModalCommentList = ({comments, user, updateComments}: NewsModal
                             ) : null}
                         </div>
                         
-                        <div className="break-words whitespace-pre-wrap max-w-full">{comment.news_comment_content}</div>
+                        {isCommentUpdate.index === commentIndex && isCommentUpdate.is
+                        ? <form className="flex flex-col gap-2 w-full">
+                            <textarea
+                                name="comment"
+                                rows={3}
+                                placeholder="다양한 의견이 서로 존중될 수 있도록 다른 사람에게 불쾌감을 주는 욕설, 혐오, 비하의 표현이나 타인의 권리를 침해하는 내용은 주의해주세요."
+                                defaultValue={comment.news_comment_content}
+                                className="w-full border-1 border-[#E5E5E5] resize-none p-2"
+                            />
+
+                            <div className="flex gap-4">
+                                <button 
+                                    onClick={() => updateComment(null)}
+                                    className="flex justify-center py-1 w-1/2 rounded-sm text-white bg-gray-300 cursor-pointer"
+                                >취소</button>
+
+                                <button 
+                                    className="flex justify-center py-1 w-1/2 rounded-sm text-white bg-[#3F63BF] cursor-pointer"
+                                >수정 등록</button>
+                            </div>
+                        </form>
+                        : <div className="break-words whitespace-pre-wrap max-w-full">{comment.news_comment_content}</div>}
                     </div>
                 )
             }) : null}
