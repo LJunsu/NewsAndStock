@@ -1,7 +1,7 @@
 
 const getSymbolStock = async (symbol: string) => {
     const period: string[] = ["1m", "3m", "ty", "1y", "5y"];
-    let periodCtr: number = 0;
+    const periodCtr: number = 0;
 
     const resp = await fetch(`https://api-v2.deepsearch.com/v2/companies/${symbol}/stock?period=${period[periodCtr]}&api_key=${process.env.DEEPSEARCH_API_KEY}`, {
         next: { revalidate: 3600 }
