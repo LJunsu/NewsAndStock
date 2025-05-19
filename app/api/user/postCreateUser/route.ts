@@ -1,13 +1,8 @@
-import { NextApiResponse } from "next";
 import { postCreateUser } from "../userTable";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { CreateUserType } from "@/lib/CreateUserType";
 
-export async function POST(req: Request, res: NextApiResponse) {
-    if(req.method !== "POST") {
-        return res.status(405).json({message: "Method Not Allowed"});
-    }
-
+export async function POST(req: NextRequest) {
     try {
         const {email, password, nickname, telNumber, profileImage} = await req.json();
         const userData: CreateUserType = {email, password, nickname, telNumber, profileImage};
