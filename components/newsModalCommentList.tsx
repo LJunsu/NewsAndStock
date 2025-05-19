@@ -42,9 +42,9 @@ export const NewsModalCommentList = ({comments, user, updateComments}: NewsModal
         // 이벤트를 발생한 form의 내부 데이터
         const formData = new FormData(formElement);
 
-        let newsId = formData.get("newsId") as string;
-        let commentId = Number(formData.get("commentId"));
-        let comment = formData.get("comment") as string;
+        const newsId = formData.get("newsId") as string;
+        const commentId = Number(formData.get("commentId"));
+        const comment = formData.get("comment") as string;
 
         const optimisticComment: CommentType = {
             news_comment_id: commentId,

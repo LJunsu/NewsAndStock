@@ -1,4 +1,4 @@
-import { ResultSetHeader, RowDataPacket } from "mysql2";
+import { ResultSetHeader } from "mysql2";
 import { NextResponse } from "next/server";
 import { newsLikeInsert } from "../newsTable";
 

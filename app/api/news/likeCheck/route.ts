@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { newsLikeCheck, newsLikeDelete, newsLikeInsert } from "../newsTable";
+import { newsLikeCheck } from "../newsTable";
 import { RowDataPacket } from "mysql2";
 
 export async function POST(req: Request) {

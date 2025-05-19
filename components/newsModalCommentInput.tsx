@@ -24,7 +24,7 @@ export const NewsModalCommentInput = ({user, newsId, insertComment} : NewsModalC
         // 이벤트를 발생한 form의 내부 데이터
         const formData = new FormData(formElement);
 
-        let comment = formData.get("comment") as string;
+        const comment = formData.get("comment") as string;
         // 낙관적 UI의 id로 사용할 중복되지 않을 임시 데이터
         const optimisticId = Date.now() + Math.random();
 
