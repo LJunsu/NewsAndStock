@@ -3,7 +3,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { match } from "path-to-regexp";
 
 const matchersForAuth = [
-    "/stock"
+    // 외부 데이터베이스를 구현했다면 그때 stock 추가하기
+    // "/stock"
+    "/test"
 ];
 
 const matchersForNoAuth = [
