@@ -1,8 +1,9 @@
 import { CommentType } from "./newsModal";
 import Image from "next/image";
 import { UserInfo } from "@/lib/UserInfo";
-import { useState } from "react";
+import React, { useRef, useState } from "react";
 import formatDateString from "@/lib/formatDateString";
+import { updateNewsCommentAction } from "./action/updateNewsCommentAction";
 
 interface NewsModalCommentListProps {
     comments: CommentType[],
@@ -18,9 +19,65 @@ export const NewsModalCommentList = ({comments, user, updateComments}: NewsModal
     const [deleteCommentId, setDeleteCommentId] = useState<DeleteCommentIdType | null>(null);
     const [isCommentUpdate, setCommentUpdate] = useState<{is: boolean, index: number | null}>({is: false, index: null});
 
+    const [actionError, setActionError] = useState<string[]>([]);
+    const updateCommentFormRef = useRef<HTMLFormElement>(null);
+    const updateTextareaRef = useRef<HTMLTextAreaElement>(null);
+
     const updateComment = (commentIndex: number | null) => {
+        setActionError([]);
+        
         if(!isCommentUpdate.is) setCommentUpdate({is: true, index: commentIndex});
-        else setCommentUpdate({is: false, index: null});
+        else {
+            if(isCommentUpdate.index === commentIndex) setCommentUpdate({is: false, index: null});
+            else setCommentUpdate({is: true, index: commentIndex});
+        }
+    }
+
+    const updateCommentEnter = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        const formElement = updateCommentFormRef.current;
+        if(!formElement) return;
+
+        // 이벤트를 발생한 form의 내부 데이터
+        const formData = new FormData(formElement);
+
+        let newsId = formData.get("newsId") as string;
+        let commentId = Number(formData.get("commentId"));
+        let comment = formData.get("comment") as string;
+
+        const optimisticComment: CommentType = {
+            news_comment_id: commentId,
+            news_comment_content: comment + "(낙관)",
+            id: newsId,
+            email: user!.email,
+            nickname: user!.nickname,
+            tel_number: user?.tel_number,
+            profile_image: user?.profile_image,
+            news_comment_insert_date: formatDateString(String(new Date()), "YYYY-MM-DD HH:mm")
+        };
+
+        if(comment.length > 3) {
+            updateComments(prev => [...prev.filter(comment => comment.news_comment_id !== commentId), optimisticComment]);
+            updateComment(commentId);
+        }
+
+        // 댓글 update를 수행하는 action
+        const result = await updateNewsCommentAction(formData);
+
+        if("formErrors" in result) {
+            if(result.fieldErrors.comment) setActionError(result.fieldErrors.comment);
+        } else {
+            updateComments(prev => {
+                // 현재 Comment 리스트에 데이터들 중 news_comment_id가 낙관적UI로 생성된 댓글 id를 제외한 배열
+                const filtered = prev.filter((item) => item.news_comment_id !== commentId);
+                // 낙관적 UI로 생성된 댓글을 제거한 후 새로운 배열 생성
+                return [...filtered, result];
+            });
+
+            // textarea 초기화
+            if (updateTextareaRef.current) updateTextareaRef.current.value = "";
+        }
     }
 
     const deleteComment = async (newsId: string, commentId: number) => {
@@ -83,8 +140,12 @@ export const NewsModalCommentList = ({comments, user, updateComments}: NewsModal
                         </div>
                         
                         {isCommentUpdate.index === commentIndex && isCommentUpdate.is
-                        ? <form className="flex flex-col gap-2 w-full">
+                        ? <form ref={updateCommentFormRef} className="flex flex-col gap-2 w-full">
+                            <input type="hidden" name="newsId" value={comment.id} />
+                            <input type="hidden" name="commentId" value={comment.news_comment_id} />
+                            <input type="hidden" name="email" value={user?.email} />
                             <textarea
+                                ref={updateTextareaRef}
                                 name="comment"
                                 rows={3}
                                 placeholder="다양한 의견이 서로 존중될 수 있도록 다른 사람에게 불쾌감을 주는 욕설, 혐오, 비하의 표현이나 타인의 권리를 침해하는 내용은 주의해주세요."
@@ -99,9 +160,12 @@ export const NewsModalCommentList = ({comments, user, updateComments}: NewsModal
                                 >취소</button>
 
                                 <button 
+                                    onClick={updateCommentEnter}
                                     className="flex justify-center py-1 w-1/2 rounded-sm text-white bg-[#3F63BF] cursor-pointer"
                                 >수정 등록</button>
                             </div>
+
+                            {actionError ? actionError.map((err, i) => <div key={i}>{err}</div>) : null}
                         </form>
                         : <div className="break-words whitespace-pre-wrap max-w-full">{comment.news_comment_content}</div>}
                     </div>

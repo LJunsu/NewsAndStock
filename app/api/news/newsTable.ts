@@ -54,6 +54,16 @@ export const insertComment = (newsId: string, email: string, comment: string) =>
     return executeSQL(query, [comment, newsId, email]);
 }
 
+// 해당 뉴스 댓글을 사용자가 입력한 댓글로 수정
+export const updateComment = (newsId: string, commemtId: string, email: string, comment: string) => {
+    const query = 
+    `UPDATE news_comment
+    SET news_comment_content = ?, news_comment_insert_date = now() 
+    WHERE id = ? AND news_comment_id = ? AND email = ?`;
+
+    return executeSQL(query, [comment, newsId, commemtId, email]);
+}
+
 // 해당 뉴스의 댓글 리스트를 반환
 export const newsComments = (newsId: string) => {
     const query = 
