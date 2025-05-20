@@ -17,6 +17,7 @@ const getTodayStocks = async (page: number) => {
 }
 
 export default async function Stock() {
+    // 로딩 구현하기
     const page = 1; // 페이지네이션 구현하기
     const todayStockData = await getTodayStocks(page);
 

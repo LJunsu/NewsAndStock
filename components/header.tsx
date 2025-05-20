@@ -40,8 +40,8 @@ export default function Header() {
     }, [email]);
 
     return (
-        <div className="flex flex-col w-full h-[100px] mb-4 *:px-4">
-            <div className="flex justify-between w-full h-1/2 bg-[#3F63BF]">
+        <div className={`flex flex-col w-full h-[${pathname.startsWith("/stock") ? "50px" : "100px"}] mb-4 *:px-4`}>
+            <div className={`flex justify-between w-full h-[50px] bg-[#3F63BF]`}>
                 <div className="flex gap-4">
                     <Link href="/" className="flex items-center">
                         <Image
@@ -57,7 +57,7 @@ export default function Header() {
                         <div className={`text-white text-xl ${pathname === "/" && "font-bold"}`}>뉴스</div>
                     </Link>
                     <Link href="/stock" className="flex items-center">
-                        <div className={`text-white text-xl ${pathname === "/stock" && "font-bold"}`}>주식</div>
+                        <div className={`text-white text-xl ${pathname.startsWith("/stock") && "font-bold"}`}>주식</div>
                     </Link>
                 </div>
 
@@ -79,16 +79,18 @@ export default function Header() {
                 </div>
             </div>
 
-            <div className="w-full h-1/2 flex items-center gap-8 bg-white border-b-1 border-b-[#E5E5E5] *:cursor-pointer">
-                <div className={`${keyword === "politics" && ("font-bold text-[#3F63BF]")}`} onClick={() => handlerClick("politics")}>정치</div>
-                <div className={`${keyword === "economy" && ("font-bold text-[#3F63BF]")}`} onClick={() => handlerClick("economy")}>경제</div>
-                <div className={`${keyword === "society" && ("font-bold text-[#3F63BF]")}`} onClick={() => handlerClick("society")}>사회</div>
-                <div className={`${keyword === "culture" && ("font-bold text-[#3F63BF]")}`} onClick={() => handlerClick("culture")}>문화</div>
-                <div className={`${keyword === "world" && ("font-bold text-[#3F63BF]")}`} onClick={() => handlerClick("world")}>세계</div>
-                <div className={`${keyword === "tech" && ("font-bold text-[#3F63BF]")}`} onClick={() => handlerClick("tech")}>기술</div>
-                <div className={`${keyword === "entertainment" && ("font-bold text-[#3F63BF]")}`} onClick={() => handlerClick("entertainment")}>엔터테이먼트</div>
-                <div className={`${keyword === "opinion" && ("font-bold text-[#3F63BF]")}`} onClick={() => handlerClick("opinion")}>의견</div>
-            </div>
+            {pathname === "/" && (
+                <div className="w-full h-1/2 flex items-center gap-8 bg-white border-b-1 border-b-[#E5E5E5] *:cursor-pointer">
+                    <div className={`${keyword === "politics" && ("font-bold text-[#3F63BF]")}`} onClick={() => handlerClick("politics")}>정치</div>
+                    <div className={`${keyword === "economy" && ("font-bold text-[#3F63BF]")}`} onClick={() => handlerClick("economy")}>경제</div>
+                    <div className={`${keyword === "society" && ("font-bold text-[#3F63BF]")}`} onClick={() => handlerClick("society")}>사회</div>
+                    <div className={`${keyword === "culture" && ("font-bold text-[#3F63BF]")}`} onClick={() => handlerClick("culture")}>문화</div>
+                    <div className={`${keyword === "world" && ("font-bold text-[#3F63BF]")}`} onClick={() => handlerClick("world")}>세계</div>
+                    <div className={`${keyword === "tech" && ("font-bold text-[#3F63BF]")}`} onClick={() => handlerClick("tech")}>기술</div>
+                    <div className={`${keyword === "entertainment" && ("font-bold text-[#3F63BF]")}`} onClick={() => handlerClick("entertainment")}>엔터테이먼트</div>
+                    <div className={`${keyword === "opinion" && ("font-bold text-[#3F63BF]")}`} onClick={() => handlerClick("opinion")}>의견</div>
+                </div>
+            )}
         </div>
     );
 }  

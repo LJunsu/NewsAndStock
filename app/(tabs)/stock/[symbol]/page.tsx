@@ -1,3 +1,4 @@
+import { Chart } from "@/components/chart";
 
 const getSymbolStock = async (symbol: string) => {
     const period: string[] = ["1m", "3m", "ty", "1y", "5y"];
@@ -19,9 +20,9 @@ export default async function StockSymbol({params}: StockSymbolProps) {
 
     const symbolStock = await getSymbolStock(symbol);
 
-    console.log(symbolStock)
-
     return (
-        <div>d3.js 적용하기</div>
+        <div className="flex py-4 w-full h-full">
+            {symbolStock.detail.ok && <Chart data={symbolStock.data} />}
+        </div>
     )
 }
