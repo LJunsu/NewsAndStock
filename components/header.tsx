@@ -80,7 +80,7 @@ export default function Header() {
             </div>
 
             {pathname === "/" && (
-                <div className="w-full h-1/2 flex items-center gap-8 bg-white border-b-1 border-b-[#E5E5E5] *:cursor-pointer">
+                <div className="w-full h-[50px] flex items-center gap-8 bg-white border-b-1 border-b-[#E5E5E5] *:cursor-pointer">
                     <div className={`${keyword === "politics" && ("font-bold text-[#3F63BF]")}`} onClick={() => handlerClick("politics")}>정치</div>
                     <div className={`${keyword === "economy" && ("font-bold text-[#3F63BF]")}`} onClick={() => handlerClick("economy")}>경제</div>
                     <div className={`${keyword === "society" && ("font-bold text-[#3F63BF]")}`} onClick={() => handlerClick("society")}>사회</div>
