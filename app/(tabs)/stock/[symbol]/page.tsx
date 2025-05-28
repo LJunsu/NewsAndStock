@@ -1,5 +1,4 @@
 import { Chart } from "@/components/chart";
-import formatDateString from "@/lib/formatDateString";
 import { getSymbolStock } from "@/lib/getSymbolStock";
 
 interface StockSymbolProps {
