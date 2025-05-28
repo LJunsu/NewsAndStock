@@ -48,7 +48,7 @@ export const Chart = ({data, symbol}: ChartProp) => {
 
         // ResizeObserver로 부모 요소 너비 추적
         const observer = new ResizeObserver(entries => {
-            for (let entry of entries) {
+            for (const entry of entries) {
                 setWidth(entry.contentRect.width);
             }
         });
