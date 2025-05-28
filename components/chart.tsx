@@ -210,7 +210,8 @@ export const Chart = ({data, symbol}: ChartProp) => {
 
         gCandle
             .selectAll("rect.candle")
-            .on("mouseover", (e, d) => {
+            .on("mouseover", (e, data) => {
+                const d = data as StockDatum;
                 tooltip
                     .style("opacity", 1)
                     .html(`
@@ -233,7 +234,8 @@ export const Chart = ({data, symbol}: ChartProp) => {
 
         gCandle
             .selectAll("line.stem")
-            .on("mouseover", (e, d) => {
+            .on("mouseover", (e, data) => {
+                const d = data as StockDatum;
                 tooltip
                     .style("opacity", 1)
                     .html(`
