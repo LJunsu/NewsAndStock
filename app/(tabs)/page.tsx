@@ -5,6 +5,7 @@ import { NewsLine } from "@/components/newsLine";
 import { NewsModal } from "@/components/newsModal";
 import { getNews } from "@/lib/getNews";
 import { NewsItem } from "@/lib/NewsIteminterface";
+import { useModal } from "@/lib/useModal";
 import useHeaderKeywordStore from "@/stores/HeaderKeywordStore";
 import { useEffect, useRef, useState } from "react";
 
@@ -55,29 +56,30 @@ export default function Home() {
         }
     }, [news]);
 
-    const [modal, setModal] = useState<string | null>(null);
-    const selectNews = (id: string) => {
-        setModal(id);
+    // const [modal, setModal] = useState<string | null>(null);
+    // const selectNews = (id: string) => {
+    //     setModal(id);
 
-        fetch(`/api/news/selectNews?id=${id}`)
-            .then((res) => res.json())
-            .then((data) => {
-                console.log(data.message);
-            });
-    }
-    const closeModal = () => {
-        setModal(null);
-    }
+    //     fetch(`/api/news/selectNews?id=${id}`)
+    //         .then((res) => res.json())
+    //         .then((data) => {
+    //             console.log(data.message);
+    //         });
+    // }
+    // const closeModal = () => {
+    //     setModal(null);
+    // }
 
-    const [modalNews, setModalNews] = useState<NewsItem | null>(null);
-    useEffect(() => {
-        if(!modal || !news) return;
+    // const [modalNews, setModalNews] = useState<NewsItem | null>(null);
+    // useEffect(() => {
+    //     if(!modal || !news) return;
 
-        const modalIndex = news.findIndex(item => {
-            if(item.id === modal) return item
-        });
-        setModalNews(news[modalIndex]);
-    }, [modal]);
+    //     const modalIndex = news.findIndex(item => {
+    //         if(item.id === modal) return item
+    //     });
+    //     setModalNews(news[modalIndex]);
+    // }, [modal]);
+   const { modal, modalNews, selectNews, closeModal } = useModal(news!);
     
     return (
         <div className="relative flex flex-col items-center gap-8 mb-8">

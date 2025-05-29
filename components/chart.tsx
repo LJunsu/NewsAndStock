@@ -14,8 +14,15 @@ interface ChartProp {
 export const Chart = ({data, symbol}: ChartProp) => {
     const wrapperRef = useRef<HTMLDivElement | null>(null);
     const svgRef = useRef<SVGSVGElement | null>(null);
+    const chartDateRef = useRef<HTMLInputElement | null>(null);
     const [width, setWidth] = useState<number>(0);
     const [chartData, setChartData] = useState<StockDatum[] | null>();
+    const [loading, setLoading] = useState<boolean>(true);
+
+    const chartDateClick = () => {
+        if(!chartDateRef.current) return;
+        chartDateRef.current.showPicker?.();
+    }
 
     useEffect(() => {
         const stockData = symbolStockDataConversion(data);
@@ -25,9 +32,10 @@ export const Chart = ({data, symbol}: ChartProp) => {
     const chartDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newDate = e.target.value;
 
+        drawLoadingSpinner();
+        
         startTransition(async () => {
             const result = await getSymbolStock(symbol, newDate);
-
             const stockData = symbolStockDataConversion(result.data);
             setChartData(stockData);
         });
@@ -36,12 +44,36 @@ export const Chart = ({data, symbol}: ChartProp) => {
     const height = 500;
     const padding = {
         top: 20,
-         right: 20,
+        right: 20,
         bottom: 30,
         left: 50
     }
-    // 캔들 차트 높이
     const candleHeight = 450;
+
+    const drawLoadingSpinner = () => {
+        const svg = d3.select(svgRef.current);
+        svg.selectAll("*").remove();
+
+        const spinner = svg
+            .append("circle")
+            .attr("cx", width / 2)
+            .attr("cy", height / 2)
+            .attr("r", 20)
+            .attr("stroke", "gray")
+            .attr("stroke-width", 4)
+            .attr("fill", "none")
+            .attr("stroke-dasharray", 31.4)
+            .attr("stroke-linecap", "round");
+
+        spinner
+            .append("animateTransform")
+            .attr("attributeName", "transform")
+            .attr("type", "rotate")
+            .attr("from", `0 ${width / 2} ${height / 2}`)
+            .attr("to", `360 ${width / 2} ${height / 2}`)
+            .attr("dur", "1s")
+            .attr("repeatCount", "indefinite");
+    };
 
     useEffect(() => {
         if (!wrapperRef.current) return;
@@ -61,7 +93,7 @@ export const Chart = ({data, symbol}: ChartProp) => {
         if (!svgRef.current || !chartData) return;
 
         const svg = d3.select(svgRef.current);
-        svg.selectAll('*').remove(); 
+        svg.selectAll("*").remove(); 
 
         // svg 기본 속성 설정
         svg
@@ -255,6 +287,8 @@ export const Chart = ({data, symbol}: ChartProp) => {
                 tooltip
                     .style("opacity", 0);
             });
+
+        setLoading(false);
     }, [chartData, width]);
 
     return (
@@ -263,7 +297,9 @@ export const Chart = ({data, symbol}: ChartProp) => {
                 ref={wrapperRef} 
                 className="flex flex-col gap-4 w-full h-full"
             >
-                <svg ref={svgRef}></svg>
+                {loading && <div className="w-full h-[500px] rounded-lg bg-gray-300 animate-pulse" />}
+                <svg ref={svgRef} className="rounded-lg" style={{display: loading ? "none" : "block"}} />
+                
 
                 <div className="w-full flex justify-between gap-8 text-lg">
                     <div className="flex flex-col gap-4">
@@ -292,9 +328,18 @@ export const Chart = ({data, symbol}: ChartProp) => {
                         </div>
                     </div>
 
-                    <div className="flex gap-4 items-start text-sm">
-                        <span>차트 날짜</span>
-                        <input type="date" onChange={chartDateChange} />
+                    <div className="text-sm">
+                        <div onClick={chartDateClick} className="flex gap-4 items-start px-3 py-2 border-2 rounded-full cursor-pointer">
+                            <span>차트 날짜</span>
+                            <input 
+                                ref={chartDateRef} 
+                                type="date" 
+                                defaultValue={new Date().toISOString().split('T')[0]} 
+                                max={new Date().toISOString().split('T')[0]} 
+                                onChange={chartDateChange} 
+                                className="border-none outline-none cursor-pointer"
+                            />
+                        </div>
                     </div>
                 </div>
             </div>

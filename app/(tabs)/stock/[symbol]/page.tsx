@@ -1,4 +1,5 @@
 import { Chart } from "@/components/chart";
+import { SymbolNews } from "@/components/symbolNews";
 import { getSymbolStock } from "@/lib/getSymbolStock";
 
 interface StockSymbolProps {
@@ -11,7 +12,7 @@ export default async function StockSymbol({params}: StockSymbolProps) {
     const symbolStock = await getSymbolStock(symbol, todayDate);
 
     return (
-        <div className="flex flex-col w-full h-full">
+        <div className="flex flex-col gap-4 w-full h-full">
             <div className="flex justify-between items-center mb-4">
                 <div className="flex flex-col">
                     <div className="text-[0.7rem] text-[#767678]">
@@ -25,6 +26,8 @@ export default async function StockSymbol({params}: StockSymbolProps) {
             </div>
 
             {symbolStock.detail.ok && <Chart data={symbolStock.data} symbol={symbol} />}
+
+            {symbolStock.detail.ok && <SymbolNews symbol={symbol} />}
         </div>
     )
 }

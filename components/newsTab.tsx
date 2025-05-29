@@ -3,7 +3,7 @@
 import Image from "next/image"
 
 export interface NewsTabProps {
-    selectNews: (id: string) => void,
+    selectNews: (id: string) => void | null,
     id: string,
     title: string,
     publisher: string,
