@@ -7,7 +7,7 @@ interface TodayStockItemProp {
 export const TodayStockItem = ({stock}: TodayStockItemProp) => {
 
     return (
-        <Link href={`/stock/${stock.symbol}`} className="w-[calc(50%-1rem)] p-2 flex justify-between gap-4 cursor-pointer border-[#E5E5E5] border-b-1 duration-100 bg-[#F4F6F8] hover:bg-[#e5e7ea]">
+        <Link href={`/stock/symbol/${stock.symbol}`} className="w-[calc(50%-1rem)] p-2 flex justify-between gap-4 cursor-pointer border-[#E5E5E5] border-b-1 duration-100 bg-[#F4F6F8] hover:bg-[#e5e7ea]">
             <div className="w-2/3 flex flex-col gap-4">
                 <div className="flex flex-col">
                     <div className="text-[0.7rem] text-[#767678]">
