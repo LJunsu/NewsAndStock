@@ -1,24 +1,13 @@
 import { StockPagination } from "@/components/stockPagination";
 import { TodayStockItem } from "@/components/todayStockItem";
 import formatDateString from "@/lib/formatDateString";
+import { getTodayStocks } from "@/lib/getTodayStocks";
 import { StockType } from "@/lib/StockDataType";
-
-// https://api-v2.deepsearch.com/v2/manual/redoc#tag/Company/operation/get_all_stock
-// https://api-v2.deepsearch.com/v2/manual/redoc#tag/Company/operation/get_company_stock
-// https://finance.naver.com/item/fchart.naver?code=034020
-
-const getTodayStocks = async (page: number) => {
-    const resp = await fetch(`https://api-v2.deepsearch.com/v2/companies/stocks?market=kr&page=${page}&page_size=16&api_key=${process.env.DEEPSEARCH_API_KEY}`);
-    const todayStocks = await resp.json();
-
-    return todayStocks;
-}
 
 interface StockPageProps {
     params: Promise<{page: string}>;
 }
 export default async function Stock({params}: StockPageProps) {
-    // 로딩 구현하기
     const {page} = await params;
 
     let pageNumber = Number(page);

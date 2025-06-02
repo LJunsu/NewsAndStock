@@ -2,7 +2,6 @@ import { RowDataPacket } from "mysql2";
 import { NextResponse } from "next/server";
 import { newsComments } from "../newsTable";
 
-
 export async function GET(req: Request) {
     const url = new URL(req.url);
     const newsId = url.searchParams.get("newsId");
